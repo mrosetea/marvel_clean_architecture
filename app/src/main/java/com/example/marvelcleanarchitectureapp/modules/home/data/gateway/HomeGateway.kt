@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import java.lang.Exception
 
 interface HomeGateway {
-    suspend fun getCharacters(forceUpdate: Boolean = false): Result<Data, Exception>
+    suspend fun getCharacters(offset: Int, limit: Int): Result<Data, Exception>
 
     suspend fun observeCharacters(): Flow<List<Character>>
 

@@ -8,21 +8,7 @@ import retrofit2.Response
 import java.lang.Exception
 
 class CharactersFactory: Factory<Data>() {
-    fun create(response: Response<CharactersResponse>): Result<Data, Exception>{
-        if(!response.isSuccessful){
-            return create()
-        }
-        val body = response.body()
-        body?.let {
-            if(it.isDataValid()) {
-                return Result.success(it.toDataModel())
-            }
-            return create()
-        }
-        return create()
-    }
-
-    fun create(characters: List<Character>): Result<Data, Exception>{
+    fun create(characters: List<Character>, error: String? = null): Result<Data, Exception>{
         if(characters.size > 0){
             return Result.success(Data(
                 characters = characters.map {
@@ -33,6 +19,7 @@ class CharactersFactory: Factory<Data>() {
                 },
                 offset = 0,
                 limit = 20,
+                error = error
             ))
         }
         return create()

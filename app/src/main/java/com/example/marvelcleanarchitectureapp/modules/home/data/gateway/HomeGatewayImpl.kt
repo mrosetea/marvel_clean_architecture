@@ -1,48 +1,52 @@
 package com.example.marvelcleanarchitectureapp.modules.home.data.gateway
 
 import com.example.marvelcleanarchitectureapp.modules.home.data.api.factory.CharactersFactory
-import com.example.marvelcleanarchitectureapp.modules.home.data.api.model.CharactersResponse
+import com.example.marvelcleanarchitectureapp.modules.home.data.api.model.toCharacter
 import com.example.marvelcleanarchitectureapp.modules.home.data.api.retrofit.CharactersApi
 import com.example.marvelcleanarchitectureapp.modules.home.data.db.dao.CharacterDao
 import com.example.marvelcleanarchitectureapp.modules.home.data.db.entities.Character
 import com.example.marvelcleanarchitectureapp.modules.home.data.model.Data
 import com.example.marvelcleanarchitectureapp.utils.Keys
 import com.example.myapplication.core.util.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
-import java.lang.Exception
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
-class HomeGatewayImpl(val charactersApi: CharactersApi, val characterDao: CharacterDao): HomeGateway {
+class HomeGatewayImpl(val charactersApi: CharactersApi, val characterDao: CharacterDao) :
+    HomeGateway {
+    override suspend fun getCharacters(offset: Int, limit: Int): Result<Data, Exception> =
+        withContext(Dispatchers.IO) {
 
-    suspend fun populateDatabase(response: Response<CharactersResponse>) {
-        //characterDao.deleteAll()
-        val toInsert: List<Character> = response.body()?.data?.results?.map {
-            Character(it.id ?: 0, it.name.orEmpty())
-        } ?: emptyList()
-        characterDao.insertAll(toInsert)
-    }
-
-    override suspend fun getCharacters(forceUpdate: Boolean): Result<Data, Exception> {
-        val charactersFactory = CharactersFactory()
-        val characatersInDatabase = characterDao.getCharacters()
-        try {
-            return if (forceUpdate || characatersInDatabase.size == 0) {
+            val charactersFactory = CharactersFactory()
+            return@withContext try {
                 val timestamp = Keys.generateTimestamp()
                 val hash = Keys.generateHash(timestamp)
-                val response = charactersApi.getCharacters(offset = 0, limit = 20, timestamp, hash,)
-                populateDatabase(response)
-                charactersFactory.create(response)
-            } else {
-
-                charactersFactory.create(characatersInDatabase)
+                val response = charactersApi.getCharacters(offset, limit, timestamp, hash)
+                response.body()?.data?.results
+                    ?.map { it.toCharacter() }
+                    ?.also { characterDao.upsertAll(it) }
+                charactersFactory.create(characterDao.getCharacters())
+            } catch (e: Exception) {
+                charactersFactory.create(characterDao.getCharacters(), e.message)
             }
-        } catch (e: Exception) {
-            val characatersInDatabase = characterDao.getCharacters()
-            return charactersFactory.create(characatersInDatabase)
         }
-    }
 
     override suspend fun observeCharacters(): Flow<List<Character>> =
-        characterDao.observeCharacters()
+        characterDao.observeCharacters().flowOn(Dispatchers.IO)
+
+
 
 }
+
+fun test() = flow<Result<Data, Exception>> {
+    //emit()
+    //delay(2000)
+    //emit()
+}
+    .flowOn(Dispatchers.IO)
+    .catch {
+        //emit()
+    }

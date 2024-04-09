@@ -17,7 +17,7 @@ interface CharacterDao {
     @Query("select * from characters")
     fun getCharacters(): List<Character>
 
-    @Query("select * from characters")
+    @Query("select * from characters order by name asc")
     fun observeCharacters(): Flow<List<Character>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -25,6 +25,9 @@ interface CharacterDao {
 
     @Upsert
     suspend fun upsert(character: Character)
+
+    @Upsert
+    suspend fun upsertAll(characters: List<Character>)
 
     @Insert
     suspend fun insertAll(characters: List<Character>)

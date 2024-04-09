@@ -1,21 +1,35 @@
 package com.example.marvelcleanarchitectureapp.modules.home.ui.view.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marvelcleanarchitectureapp.R
 import com.example.marvelcleanarchitectureapp.databinding.HomeCharacterItemBinding
 import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
 
-class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+class HomeAdapter : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(object :
+    DiffUtil.ItemCallback<ViewData.Character>() {
+    override fun areItemsTheSame(
+        oldItem: ViewData.Character,
+        newItem: ViewData.Character
+    ): Boolean {
+        return oldItem.id == newItem.id
+    }
 
-    val items: MutableList<ViewData.Character> = mutableListOf();
+    override fun areContentsTheSame(
+        oldItem: ViewData.Character,
+        newItem: ViewData.Character
+    ): Boolean {
+        return oldItem == newItem
+    }
+
+}) {
 
     class HomeViewHolder(private val binding: HomeCharacterItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ViewData.Character) {
-            Log.d("DEBUGBIND", item.name)
             binding.character = item
         }
     }
@@ -29,18 +43,8 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position)
         holder.bind(item)
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    fun updateItems(items: List<ViewData.Character>) {
-        this.items.clear()
-        this.items.addAll(items)
-        notifyDataSetChanged()
     }
 
 }

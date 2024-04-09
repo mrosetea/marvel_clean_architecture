@@ -1,5 +1,7 @@
 package com.example.marvelcleanarchitectureapp.modules.home.data.api.model
 
+import com.example.marvelcleanarchitectureapp.modules.home.data.db.entities.Character
+
 class CharactersResponse (
     val code: Int? = 0,
     val status: String? = "",
@@ -79,4 +81,8 @@ class CharactersResponse (
             )
         }
     }
+}
+
+fun CharactersResponse.Data.Result.toCharacter (): Character {
+    return Character(id ?: 0, name.orEmpty())
 }

@@ -1,15 +1,16 @@
 package com.example.marvelcleanarchitectureapp.modules.home.ui.view.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.marvelcleanarchitectureapp.databinding.HomeFragmentBinding
-import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -30,8 +31,16 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.swiper.setOnRefreshListener {
-
+            viewModel.fetchCharacters(0)
         }
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!recyclerView.canScrollVertically(1)) {
+                    viewModel.fetchCharacters(homeAdapter.itemCount)
+                }
+            }
+        })
         homeAdapter = HomeAdapter()
         binding.recyclerView.adapter = homeAdapter
         collectFlows()
@@ -50,49 +59,25 @@ class HomeFragment : Fragment() {
 
     private fun onUiStateChangeCollected(uiState: HomeUIStateChange) {
         when (uiState) {
-            is HomeUIStateChange.AddHomeLoading -> onToggleLoading(uiState)
-            is HomeUIStateChange.RemoveHomeLoading -> onToggleLoading(uiState)
+            is HomeUIStateChange.Loading -> onToggleLoading(uiState)
             is HomeUIStateChange.AddCharactersList -> onAddHomePokemonListCollected(uiState)
             is HomeUIStateChange.AddHomeError -> onAddHomeErrorCollected(uiState)
             else -> {}
         }
     }
 
-    private fun toggleLoading(visible: Boolean): Int {
-        return if (visible) {
-            View.VISIBLE
-        } else {
-            View.INVISIBLE
-        }
-    }
-
-    private fun onToggleLoading(uiState: HomeUIStateChange.AddHomeLoading) {
-        binding.progressBar.visibility = toggleLoading(uiState.isLoading)
-    }
-
-    private fun onToggleLoading(uiState: HomeUIStateChange.RemoveHomeLoading) {
-        binding.progressBar.visibility = toggleLoading(uiState.isLoading)
+    private fun onToggleLoading(uiState: HomeUIStateChange.Loading) {
+        binding.progressBar.isVisible = uiState.isLoading
+        binding.swiper.isRefreshing = uiState.isLoading
     }
 
     private fun onAddHomePokemonListCollected(uiState: HomeUIStateChange.AddCharactersList) {
-        uiState.viewData.characters.let {
-            Log.d("DATADEBUG", it.toString())
-            val list: List<ViewData.Character> = it.map {
-                ViewData.Character(
-                    id = it.id,
-                    name = it.name
-                )
-            }
-            homeAdapter.updateItems(list)
-
-        }
-        //uiState.pokemons.toUIModel().let {
-        //homeAdapter.updateItems(it.results)
-        //}
+        homeAdapter.submitList(uiState.viewData.characters)
     }
 
-    private fun onAddHomeErrorCollected(uiState: HomeUIStateChange) {
-        //TODO IMPLEMENTAR CASO DE ERROR
+    private fun onAddHomeErrorCollected(uiState: HomeUIStateChange.AddHomeError) {
+        Toast.makeText(requireContext(), uiState.error, Toast.LENGTH_LONG).show()
+        homeAdapter.submitList(uiState.viewData.characters)
     }
 
 }

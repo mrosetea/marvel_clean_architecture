@@ -1,13 +1,13 @@
 package com.example.marvelcleanarchitectureapp.modules.home.ui.view.home
 
-import com.example.marvelcleanarchitectureapp.modules.home.data.model.Data
+import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
 
 sealed interface HomeUIStateChange {
 
     fun toUiState(previousState: HomeUIState): HomeUIState
 
-    class AddHomeLoading(
-        val isLoading: Boolean = true,
+    class Loading(
+        val isLoading: Boolean,
     ): HomeUIStateChange {
         override fun toUiState(previousState: HomeUIState): HomeUIState
                 = previousState.copy(
@@ -15,17 +15,8 @@ sealed interface HomeUIStateChange {
         )
     }
 
-    class RemoveHomeLoading(
-        val isLoading: Boolean = false
-    ): HomeUIStateChange {
-        override fun toUiState(previousState: HomeUIState): HomeUIState
-                = previousState.copy(
-            isLoading = false,
-        )
-    }
-
     class AddCharactersList(
-        val viewData: Data = Data(
+        val viewData: ViewData = ViewData(
             0,
             20,
             characters = emptyList()
@@ -40,7 +31,7 @@ sealed interface HomeUIStateChange {
     class AddHomeError(
         val error: String,
         private val isLoading: Boolean = false,
-        private val viewData: Data = Data(
+        val viewData: ViewData = ViewData(
             0,
             20,
             characters = emptyList()
