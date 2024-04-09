@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/homeFragment"
+    android:id="@+id/navigation_graph">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.marvelcleanarchitectureapp.modules.home.ui.view.home.HomeFragment"
+        android:label="homeFragment"
+        tools:layout="@layout/home_fragment">
+
+    </fragment>
+</navigation>

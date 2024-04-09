@@ -9,6 +9,8 @@ interface CharactersApi {
 
     @GET("characters")
     suspend fun getCharacters(
+        @Query("offset") offset: Int? = 0,
+        @Query("limit") limit: Int? = 20,
         @Query("ts") timestamp: String? = null,
         @Query("hash") hash: String? = null,
         @Query("apikey") apikey: String? = Keys.PUBLIC_KEY,
