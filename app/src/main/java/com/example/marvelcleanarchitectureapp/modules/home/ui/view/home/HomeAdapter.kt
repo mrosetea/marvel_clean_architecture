@@ -34,7 +34,7 @@ class HomeAdapter(private val listener: (name: String) -> Unit) : ListAdapter<Vi
         fun bind(item: ViewData.Character) {
             binding.character = item
             itemView.setOnClickListener{
-                listener(item.name)
+                listener(item.id.toString())
             }
         }
     }

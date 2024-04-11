@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.marvelcleanarchitectureapp.databinding.DetailsFragmentBinding
@@ -26,5 +27,13 @@ class DetailsFragment: Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+        arguments?.getString("name").let {
+            binding.webview.settings.javaScriptEnabled = true
+            binding.webview.webViewClient = WebViewClient()
+            binding.webview.loadUrl(generateWebViewUrl(it.orEmpty()))
+        }
     }
+    //private fun generateWebViewUrl(name: String): String = "https://www.pokemon.com/us/pokedex/${name}"
+    private fun generateWebViewUrl(name: String): String = "https://www.marvel.com/comics/characters/${name}/spider-man_peter_parker"
+
 }
