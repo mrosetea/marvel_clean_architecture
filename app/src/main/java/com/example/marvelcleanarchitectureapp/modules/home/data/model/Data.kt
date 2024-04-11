@@ -10,7 +10,8 @@ class Data(
 ) {
     class Character(
         val id: Int,
-        val name: String
+        val name: String,
+        val urlImage: String,
     )
 }
 
@@ -20,7 +21,8 @@ fun Data.toViewData(): ViewData = ViewData(
     characters = characters.map {
         ViewData.Character(
             it.id,
-            it.name
+            it.name,
+            it.urlImage
         )
     }
 )

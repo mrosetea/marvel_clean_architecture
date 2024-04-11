@@ -1,5 +1,6 @@
 package com.example.marvelcleanarchitectureapp.modules.home.data.gateway
 
+import android.util.Log
 import com.example.marvelcleanarchitectureapp.modules.home.data.api.factory.CharactersFactory
 import com.example.marvelcleanarchitectureapp.modules.home.data.api.model.toCharacter
 import com.example.marvelcleanarchitectureapp.modules.home.data.api.retrofit.CharactersApi
@@ -25,6 +26,7 @@ class HomeGatewayImpl(val charactersApi: CharactersApi, val characterDao: Charac
                 val timestamp = Keys.generateTimestamp()
                 val hash = Keys.generateHash(timestamp)
                 val response = charactersApi.getCharacters(offset, limit, timestamp, hash)
+                Log.d("DEBUG IMG", response.body()?.data?.results?.get(0)?.thumbnail?.path.orEmpty())
                 response.body()?.data?.results
                     ?.map { it.toCharacter() }
                     ?.also { characterDao.upsertAll(it) }

@@ -1,5 +1,6 @@
 package com.example.marvelcleanarchitectureapp.modules.home.ui.view.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +10,7 @@ import com.example.marvelcleanarchitectureapp.R
 import com.example.marvelcleanarchitectureapp.databinding.HomeCharacterItemBinding
 import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
 
-class HomeAdapter : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(object :
+class HomeAdapter(private val listener: () -> Unit) : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(object :
     DiffUtil.ItemCallback<ViewData.Character>() {
     override fun areItemsTheSame(
         oldItem: ViewData.Character,
@@ -27,10 +28,13 @@ class HomeAdapter : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(
 
 }) {
 
-    class HomeViewHolder(private val binding: HomeCharacterItemBinding) :
+    class HomeViewHolder(private val binding: HomeCharacterItemBinding, private val listener: () -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ViewData.Character) {
             binding.character = item
+            itemView.setOnClickListener{
+                listener()
+            }
         }
     }
 
@@ -38,12 +42,13 @@ class HomeAdapter : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.home_character_item, parent, false)
         val binding = HomeCharacterItemBinding.bind(view)
-        return HomeViewHolder(binding)
+        return HomeViewHolder(binding, listener)
 
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         val item = getItem(position)
+        Log.d("DEBUGGG", item.urlImage)
         holder.bind(item)
     }
 

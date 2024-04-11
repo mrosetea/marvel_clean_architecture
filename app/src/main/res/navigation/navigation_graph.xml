@@ -9,6 +9,12 @@
         android:name="com.example.marvelcleanarchitectureapp.modules.home.ui.view.home.HomeFragment"
         android:label="homeFragment"
         tools:layout="@layout/home_fragment">
-
+        <action android:id="@+id/action_from_home_to_detail"
+            app:destination="@id/detailsFragment"/>
     </fragment>
+    <fragment android:id="@+id/detailsFragment"
+        android:name="com.example.marvelcleanarchitectureapp.modules.home.ui.view.details.DetailsFragment"
+        android:label="detailsFragment"
+        tools:layout="@layout/details_fragment"
+        />
 </navigation>

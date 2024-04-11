@@ -84,5 +84,5 @@ class CharactersResponse (
 }
 
 fun CharactersResponse.Data.Result.toCharacter (): Character {
-    return Character(id ?: 0, name.orEmpty())
+    return Character(id ?: 0, name.orEmpty(), thumbnail?.path + "." + thumbnail?.extension)
 }

@@ -8,8 +8,10 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.marvelcleanarchitectureapp.R
 import com.example.marvelcleanarchitectureapp.databinding.HomeFragmentBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,7 +31,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.layoutManager =
+            GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         binding.swiper.setOnRefreshListener {
             viewModel.fetchCharacters(0)
         }
@@ -41,7 +44,11 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-        homeAdapter = HomeAdapter()
+        homeAdapter = HomeAdapter {
+            findNavController().navigate(
+                R.id.action_from_home_to_detail
+            )
+        }
         binding.recyclerView.adapter = homeAdapter
         collectFlows()
     }
@@ -60,7 +67,7 @@ class HomeFragment : Fragment() {
     private fun onUiStateChangeCollected(uiState: HomeUIStateChange) {
         when (uiState) {
             is HomeUIStateChange.Loading -> onToggleLoading(uiState)
-            is HomeUIStateChange.AddCharactersList -> onAddHomePokemonListCollected(uiState)
+            is HomeUIStateChange.AddCharactersList -> onAddHomeCharacterListCollected(uiState)
             is HomeUIStateChange.AddHomeError -> onAddHomeErrorCollected(uiState)
             else -> {}
         }
@@ -71,7 +78,7 @@ class HomeFragment : Fragment() {
         binding.swiper.isRefreshing = uiState.isLoading
     }
 
-    private fun onAddHomePokemonListCollected(uiState: HomeUIStateChange.AddCharactersList) {
+    private fun onAddHomeCharacterListCollected(uiState: HomeUIStateChange.AddCharactersList) {
         homeAdapter.submitList(uiState.viewData.characters)
     }
 

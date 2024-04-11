@@ -5,19 +5,22 @@
     android:id="@+id/swiper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:id="@+id/recyclerView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_edittext"
             app:layout_constraintEnd_toEndOf="parent" />
-
 
         <ProgressBar
             android:indeterminate="true"
