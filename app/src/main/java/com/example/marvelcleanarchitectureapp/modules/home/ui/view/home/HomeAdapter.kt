@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.marvelcleanarchitectureapp.R
 import com.example.marvelcleanarchitectureapp.databinding.HomeCharacterItemBinding
 import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
 
-class HomeAdapter(private val listener: () -> Unit) : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(object :
+class HomeAdapter(private val listener: (name: String) -> Unit) : ListAdapter<ViewData.Character, HomeAdapter.HomeViewHolder>(object :
     DiffUtil.ItemCallback<ViewData.Character>() {
     override fun areItemsTheSame(
         oldItem: ViewData.Character,
@@ -28,12 +29,12 @@ class HomeAdapter(private val listener: () -> Unit) : ListAdapter<ViewData.Chara
 
 }) {
 
-    class HomeViewHolder(private val binding: HomeCharacterItemBinding, private val listener: () -> Unit) :
+    class HomeViewHolder(private val binding: HomeCharacterItemBinding, private val listener: (name: String) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ViewData.Character) {
             binding.character = item
             itemView.setOnClickListener{
-                listener()
+                listener(item.name)
             }
         }
     }

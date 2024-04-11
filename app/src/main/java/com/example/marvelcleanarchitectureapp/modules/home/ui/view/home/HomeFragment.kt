@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
         })
         homeAdapter = HomeAdapter {
             findNavController().navigate(
-                R.id.action_from_home_to_detail
+                R.id.action_from_home_to_detail, bundleOf("name" to it)
             )
         }
         binding.recyclerView.adapter = homeAdapter

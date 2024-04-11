@@ -11,14 +11,15 @@
             type="com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData.Character" />
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tool="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center">
 
         <androidx.cardview.widget.CardView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="8dp"
@@ -28,37 +29,63 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tool:layout_height="200dp"
+            tool:layout_width="200dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+
                 <ImageView
                     android:id="@+id/characterImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:contentDescription="TODO"
-                    android:src="@drawable/img"
-                    app:layout_constraintBottom_toBottomOf="@id/name"
+                    android:layout_width="150dp"
+                    android:layout_height="120dp"
+                    app:imageUrl="@{character.urlImage}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tool:src="@drawable/img_test"
+                    android:contentDescription="asda" />
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:paddingBottom="12dp"
                     android:text="@{character.name}"
                     android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/characterImage" />
+                    app:layout_constraintTop_toBottomOf="@id/characterImage"
+                    tool:text="Marvel" />
+
+                <TextView
+                    android:background="@drawable/round_edittext"
+                    android:id="@+id/id"
+                    android:paddingHorizontal="4dp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="@{Integer.toString(character.id)}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tool:text="#01" />
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 </layout>
