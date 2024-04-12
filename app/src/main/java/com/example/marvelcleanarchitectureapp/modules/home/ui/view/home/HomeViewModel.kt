@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.marvelcleanarchitectureapp.modules.home.data.gateway.HomeGateway
 import com.example.marvelcleanarchitectureapp.modules.home.data.model.toViewData
 import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
-import kotlinx.coroutines.Delay
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +27,6 @@ class HomeViewModel(private val homeGateway: HomeGateway) : ViewModel() {
     )
 
 
-
     private val _uiStateChange = MutableStateFlow<HomeUIStateChange>(HomeUIStateChange.None())
     val uiStateChange = _uiStateChange.asStateFlow()
 
@@ -44,7 +41,7 @@ class HomeViewModel(private val homeGateway: HomeGateway) : ViewModel() {
         }
     }
 
-    fun fetchCharacters(offset: Int){
+    fun fetchCharacters(offset: Int) {
         viewModelScope.launch {
             updateUiState(HomeUIStateChange.Loading(true))
             val result = homeGateway.getCharacters(offset, LIMIT)
@@ -73,9 +70,6 @@ class HomeViewModel(private val homeGateway: HomeGateway) : ViewModel() {
             }
         }
     }
-
-
-
 
 
 }
