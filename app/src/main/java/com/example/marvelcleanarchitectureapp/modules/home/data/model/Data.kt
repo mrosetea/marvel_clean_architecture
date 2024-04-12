@@ -15,14 +15,3 @@ class Data(
     )
 }
 
-fun Data.toViewData(): ViewData = ViewData(
-    limit = limit,
-    offset = offset,
-    characters = characters.map {
-        ViewData.Character(
-            it.id,
-            it.name,
-            it.urlImage
-        )
-    }
-)

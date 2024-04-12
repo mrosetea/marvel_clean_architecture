@@ -3,7 +3,7 @@ package com.example.marvelcleanarchitectureapp.modules.home.ui.view.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvelcleanarchitectureapp.modules.home.data.gateway.HomeGateway
-import com.example.marvelcleanarchitectureapp.modules.home.data.model.toViewData
+import com.example.marvelcleanarchitectureapp.modules.home.ui.mapper.toViewData
 import com.example.marvelcleanarchitectureapp.modules.home.ui.model.ViewData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
